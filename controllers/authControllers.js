@@ -254,20 +254,12 @@ const otpVerification = async (req, res) => {
 };
 const resetPassword = async (req, res) => {
   try {
-    const { email, oldPassword, newPassword, confirmPassword, otp } = req.body;
+    const { email, newPassword, confirmPassword, otp } = req.body;
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(404).send({
         status: false,
         message: "We cannot find an account with that email address.",
-      });
-    }
-    const isValid = await comparePassword(oldPassword, user.password);
-    // return res.json(isValid);
-    if (!isValid) {
-      return res.status(401).send({
-        status: false,
-        message: "old password doesn't match.",
       });
     }
     const isOtpVerified = await userModel.findOne({

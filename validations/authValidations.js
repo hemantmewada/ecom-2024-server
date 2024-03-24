@@ -53,12 +53,6 @@ const resetPasswordValidationShema = z
       required_error: "otp is required",
       invalid_type_error: "otp must be a number",
     }),
-    oldPassword: z
-      .string({ required_error: "old password is required." })
-      .min(3, { message: "old password can't be less than 6 characters." })
-      .max(255, {
-        message: "old password can't be greater than 255 characters.",
-      }),
     newPassword: z
       .string({ required_error: "new password is required." })
       .min(3, { message: "new password can't be less than 6 characters." })
