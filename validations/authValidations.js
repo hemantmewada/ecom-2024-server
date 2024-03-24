@@ -30,5 +30,57 @@ const loginValidationShema = z.object({
     .min(3, { message: "Password can't be less than 6 characters." })
     .max(255, { message: "Password can't be greater than 255 characters." }),
 });
+const forgotPasswordValidationShema = z.object({
+  email: z
+    .string({ required_error: "Email is required." })
+    .email({ message: "Invalid email address" }),
+});
+const otpValidationShema = z.object({
+  email: z
+    .string({ required_error: "Email is required." })
+    .email({ message: "Invalid email address" }),
+  otp: z.number({
+    required_error: "otp is required",
+    invalid_type_error: "otp must be a number",
+  }),
+});
+const resetPasswordValidationShema = z
+  .object({
+    email: z
+      .string({ required_error: "Email is required." })
+      .email({ message: "Invalid email address" }),
+    otp: z.number({
+      required_error: "otp is required",
+      invalid_type_error: "otp must be a number",
+    }),
+    oldPassword: z
+      .string({ required_error: "old password is required." })
+      .min(3, { message: "old password can't be less than 6 characters." })
+      .max(255, {
+        message: "old password can't be greater than 255 characters.",
+      }),
+    newPassword: z
+      .string({ required_error: "new password is required." })
+      .min(3, { message: "new password can't be less than 6 characters." })
+      .max(255, {
+        message: "new password can't be greater than 255 characters.",
+      }),
+    confirmPassword: z
+      .string({ required_error: "confirm password is required." })
+      .min(3, { message: "confirm password can't be less than 6 characters." })
+      .max(255, {
+        message: "confirm password can't be greater than 255 characters.",
+      }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "cofirm password didn't match",
+    path: ["confirm"],
+  });
 
-module.exports = { registerValidationShema, loginValidationShema };
+module.exports = {
+  registerValidationShema,
+  loginValidationShema,
+  forgotPasswordValidationShema,
+  otpValidationShema,
+  resetPasswordValidationShema,
+};

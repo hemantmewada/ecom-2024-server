@@ -33,6 +33,6 @@ app.use("/api/auth", authRouter);
 
 mongodbConnect().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is listening on port: ${PORT}`.bgGreen);
+    console.log(`Server is listening on port: ${PORT}`);
   });
 });
