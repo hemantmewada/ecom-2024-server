@@ -5,6 +5,8 @@ const mongodbConnect = require("./config/db");
 const testRouter = require("./routes/testRoutes");
 const authRouter = require("./routes/authRoutes");
 const config = require("./config/config");
+const categoryRouter = require("./routes/categoryRoutes");
+const productRouter = require("./routes/productRoutes");
 
 // configure dotenv
 dotenv.config();
@@ -18,6 +20,7 @@ const app = express();
 // using middlewares
 app.use(cors());
 app.use(express.json());
+// app.use(formidableMiddleware());
 
 // home route
 app.get("/", (req, res) => {
@@ -30,6 +33,8 @@ app.get("/", (req, res) => {
 // other routes
 app.use("/api", testRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 
 mongodbConnect().then(() => {
   app.listen(PORT, () => {

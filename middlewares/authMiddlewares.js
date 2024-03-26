@@ -21,6 +21,20 @@ const authMiddleware = (schema) => async (req, res, next) => {
     });
   }
 };
+const formDataMiddleware = (schema) => async (req, res, next) => {
+  try {
+    const parsedBody = await schema.parseAsync(req.fields);
+    req.fields = parsedBody;
+    next();
+  } catch (error) {
+    const message = error.errors[0].message;
+    return res.status(500).send({
+      status: false,
+      message,
+      error,
+    });
+  }
+};
 
 const verifyJWT = async (req, res, next) => {
   try {
@@ -82,4 +96,4 @@ const isAdmin = async (req, res, next) => {
     });
   }
 };
-module.exports = { authMiddleware, verifyJWT, isAdmin };
+module.exports = { authMiddleware, verifyJWT, isAdmin, formDataMiddleware };

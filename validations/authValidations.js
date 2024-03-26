@@ -71,10 +71,46 @@ const resetPasswordValidationShema = z
     path: ["confirm"],
   });
 
+const createCategoryValidationShema = z.object({
+  name: z
+    .string({ required_error: "Name is required." })
+    .trim()
+    .min(3, { message: "Name can't be less than 3 characters." })
+    .max(255, { message: "Name can't be greater than 255 characters." }),
+});
+const createProductValidationShema = z.object({
+  name: z
+    .string({ required_error: "Name is required." })
+    .trim()
+    .min(3, { message: "Name can't be less than 3 characters." })
+    .max(255, { message: "Name can't be greater than 255 characters." }),
+  description: z
+    .string({ required_error: "Description is required." })
+    .trim()
+    .min(3, { message: "Description can't be less than 3 characters." })
+    .max(255, { message: "Description can't be greater than 255 characters." }),
+  price: z
+    .string({
+      required_error: "price is required",
+    })
+    .min(1, { message: "price can't be empty." }),
+  category: z
+    .string({ required_error: "Category is required." })
+    .trim()
+    .length(24, { message: "please give corret category." }),
+  quantity: z
+    .string({
+      required_error: "quantity is required",
+    })
+    .trim()
+    .min(1, { message: "quantity can't be empty." }),
+});
 module.exports = {
   registerValidationShema,
   loginValidationShema,
   forgotPasswordValidationShema,
   otpValidationShema,
   resetPasswordValidationShema,
+  createCategoryValidationShema,
+  createProductValidationShema,
 };
