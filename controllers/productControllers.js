@@ -53,7 +53,7 @@ const getAllProductsController = async (req, res) => {
       .populate("category")
       .sort({ createdAt: -1 });
     if (products.length > 0) {
-      return res.status(302).send({
+      return res.status(200).send({
         status: true,
         message: "All Products.",
         totalProductsCount: products.length,
@@ -81,7 +81,7 @@ const getSingleProductController = async (req, res) => {
       .findOne({ slug, isActive: 1 })
       .select({ image: 0 });
     if (product) {
-      return res.status(302).send({
+      return res.status(200).send({
         status: true,
         message: "Product found.",
         data: product,
@@ -107,7 +107,7 @@ const getImageController = async (req, res) => {
     const product = await productModel.findOne({ _id, isActive: 1 });
     if (product) {
       res.set("Content-type", product.image.contentType);
-      return res.status(302).send(product.image.data);
+      return res.status(200).send(product.image.data);
     } else {
       return res.status(404).send({
         status: false,

@@ -6,7 +6,7 @@ const createCategoryController = async (req, res) => {
     const { name } = req.body;
     const exist = await categoryModel.findOne({ name });
     if (exist) {
-      return res.status(302).send({
+      return res.status(400).send({
         status: false,
         message: "Category name already exist.",
       });
@@ -45,8 +45,8 @@ const getCategoryController = async (req, res) => {
         data: categories,
       });
     } else {
-      return res.status(404).send({
-        status: false,
+      return res.status(200).send({
+        status: true,
         message: "No categories were found.",
       });
     }
@@ -62,7 +62,7 @@ const singleCategoryController = async (req, res) => {
     const { slug } = req.params;
     const category = await categoryModel.findOne({ slug });
     if (category) {
-      return res.status(302).send({
+      return res.status(200).send({
         status: true,
         message: "Category found.",
         data: category,
