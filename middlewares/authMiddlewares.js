@@ -38,7 +38,8 @@ const formDataMiddleware = (schema) => async (req, res, next) => {
 
 const verifyJWT = async (req, res, next) => {
   try {
-    let token = req.headers["authorization"];
+    // let token = req.headers["authorization"];
+    let token = req.headers.authorization;
     if (!token) {
       return res.status(404).send({
         status: false,

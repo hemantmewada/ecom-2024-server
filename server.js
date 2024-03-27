@@ -38,6 +38,6 @@ app.use("/api/product", productRouter);
 
 mongodbConnect().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is listening on port: ${PORT}`);
+    console.log(`Server is listening on port: ${PORT}`.bgGreen);
   });
 });
