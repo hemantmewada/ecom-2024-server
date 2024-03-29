@@ -44,4 +44,13 @@ authRouter.put(
   verifyJWT,
   authControllers.updateProfileController
 );
+
+// get all users
+authRouter.get(
+  "/all-users",
+  verifyJWT,
+  isAdmin,
+  authControllers.getAllUsersController
+);
+
 module.exports = authRouter;

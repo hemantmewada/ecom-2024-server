@@ -1,6 +1,6 @@
 const orderModel = require("../models/orderModel");
 
-const getAllOrders = async (req, res) => {
+const getAllOrdersController = async (req, res) => {
   try {
     const { _id, role } = req.body.user;
     let condition = {};
@@ -37,5 +37,35 @@ const getAllOrders = async (req, res) => {
     });
   }
 };
+const updateStatusController = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const { status } = req.body;
+    const order = await orderModel.findByIdAndUpdate(
+      _id,
+      { status },
+      { new: true }
+    );
+    if (order) {
+      return res.status(200).send({
+        status: true,
+        message: "Status updated successfully",
+        data: order,
+      });
+    } else {
+      return res.status(400).send({
+        status: true,
+        message: "Status not updated successfully",
+        data: order,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Errro in updateStatusController api: ${error}`,
+      error,
+    });
+  }
+};
 
-module.exports = { getAllOrders };
+module.exports = { getAllOrdersController, updateStatusController };

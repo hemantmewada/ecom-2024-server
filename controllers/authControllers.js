@@ -327,6 +327,32 @@ const updateProfileController = async (req, res) => {
     });
   }
 };
+
+// all users
+const getAllUsersController = async (req, res) => {
+  try {
+    const users = await userModel
+      .find({ role: "customer" })
+      .sort({ createdAt: -1 });
+    if (users.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "Users list.",
+        data: users,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No users were found.",
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in getAllUsersController api ${error}`,
+    });
+  }
+};
 module.exports = {
   registerController,
   loginController,
@@ -335,4 +361,5 @@ module.exports = {
   otpVerification,
   resetPassword,
   updateProfileController,
+  getAllUsersController,
 };
