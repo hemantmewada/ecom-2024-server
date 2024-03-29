@@ -23,7 +23,7 @@ const generateJWT = async (user) => {
     const jwt = await jsonwebtoken.sign(
       { userId: user._id, userEmail: user.email, userRole: user.role },
       config.JWT_SECRET_KEY,
-      { expiresIn: "1d" }
+      { expiresIn: "10d" }
     );
     // console.log("jwt", jwt);
     return jwt;
