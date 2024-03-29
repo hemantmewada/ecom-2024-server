@@ -55,7 +55,7 @@ const verifyJWT = async (req, res, next) => {
     token = token.replace("Bearer ", "").trim();
     // console.log(token);
     // token = token.split(" ")[1];
-    const isVerified = await jsonwebtoken.verify(token, config.JWT_SECRET_KEY);
+    const isVerified = jsonwebtoken.verify(token, config.JWT_SECRET_KEY);
     if (isVerified) {
       const userData = await userModel
         .findById(isVerified.userId)

@@ -34,6 +34,14 @@ authRouter.post(
   authMiddleware(validationSchema.resetPasswordValidationShema),
   authControllers.resetPassword
 );
+
+// get profile
 authRouter.get("/profile", verifyJWT, authControllers.profileController);
 
+// update a category
+authRouter.put(
+  "/update-profile",
+  verifyJWT,
+  authControllers.updateProfileController
+);
 module.exports = authRouter;

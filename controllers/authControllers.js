@@ -252,6 +252,8 @@ const otpVerification = async (req, res) => {
     });
   }
 };
+
+// reset password
 const resetPassword = async (req, res) => {
   try {
     const { email, newPassword, confirmPassword, otp } = req.body;
@@ -296,6 +298,35 @@ const resetPassword = async (req, res) => {
     });
   }
 };
+// reset password
+const updateProfileController = async (req, res) => {
+  try {
+    const { name, phone, address, city, zip } = req.body;
+    const userUpdate = await userModel.findByIdAndUpdate(
+      req.body.user._id,
+      req.body,
+      { new: true }
+    );
+    if (userUpdate) {
+      return res.status(200).send({
+        status: true,
+        message: "Profile has been udpated successfully.",
+        data: userUpdate,
+      });
+    } else {
+      return res.status(400).send({
+        status: true,
+        message: "Profile didn't changed.",
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in updateProfileController api: ${error}`,
+      error,
+    });
+  }
+};
 module.exports = {
   registerController,
   loginController,
@@ -303,4 +334,5 @@ module.exports = {
   forgotPassword,
   otpVerification,
   resetPassword,
+  updateProfileController,
 };

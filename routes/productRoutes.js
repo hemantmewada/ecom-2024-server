@@ -40,6 +40,7 @@ productRouter.delete(
   isAdmin,
   productController.deleteProductController
 );
+
 // update product
 productRouter.put(
   "/update/:_id",
@@ -49,4 +50,35 @@ productRouter.put(
   formDataMiddleware(createProductValidationShema),
   productController.udpateProductController
 );
+
+// filter products
+productRouter.post("/filter", productController.filterProductsController);
+
+// product list as per page
+productRouter.get(
+  "/product-list/:page",
+  productController.productListController
+);
+
+// product total count
+productRouter.get("/product-count", productController.productCountController);
+
+// product search
+productRouter.get(
+  "/search/:keyword",
+  productController.productSearchController
+);
+
+// get related products
+productRouter.get(
+  "/related/:productId/:categoryId",
+  productController.getRelatedProductsController
+);
+
+// get category wise products
+productRouter.get(
+  "/category-products/:slug",
+  productController.getCategoryProductsController
+);
+
 module.exports = productRouter;

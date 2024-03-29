@@ -87,8 +87,8 @@ const createProductValidationShema = z.object({
   description: z
     .string({ required_error: "Description is required." })
     .trim()
-    .min(3, { message: "Description can't be less than 3 characters." })
-    .max(255, { message: "Description can't be greater than 255 characters." }),
+    .min(3, { message: "Description can't be less than 3 characters." }),
+  // .max(255, { message: "Description can't be greater than 255 characters." }),
   price: z
     .string({
       required_error: "price is required",

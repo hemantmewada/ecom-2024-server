@@ -1,11 +1,19 @@
 const fs = require("fs");
 const productModel = require("../models/productModel");
 const slugify = require("slugify");
+const categoryModel = require("../models/categoryModel");
 
 // create a product
 const createProductController = async (req, res) => {
   try {
-    const { name } = req.fields;
+    const { name, category } = req.fields;
+    const categoryDetail = await categoryModel.findById(category);
+    if (!categoryDetail) {
+      return res.status(404).send({
+        status: false,
+        messaeg: "Category not found.",
+      });
+    }
     const { image } = req.files;
     if (!image) {
       return res.status(404).send({
@@ -51,6 +59,7 @@ const getAllProductsController = async (req, res) => {
       // .select("-image")
       .select({ image: 0 })
       .populate("category")
+      // .limit(8)
       .sort({ createdAt: -1 });
     if (products.length > 0) {
       return res.status(200).send({
@@ -60,9 +69,10 @@ const getAllProductsController = async (req, res) => {
         data: products,
       });
     } else {
-      return res.status(404).send({
-        status: false,
+      return res.status(200).send({
+        status: true,
         message: "No products were found.",
+        data: products,
       });
     }
   } catch (error) {
@@ -79,6 +89,7 @@ const getSingleProductController = async (req, res) => {
     const { slug } = req.params;
     const product = await productModel
       .findOne({ slug, isActive: 1 })
+      .populate("category")
       .select({ image: 0 });
     if (product) {
       return res.status(200).send({
@@ -182,6 +193,201 @@ const udpateProductController = async (req, res) => {
     });
   }
 };
+
+// get all products with filter
+const filterProductsController = async (req, res) => {
+  try {
+    const { checked, price } = req.body;
+    let args = {};
+    if (checked.length > 0) args.category = checked;
+    if (price.length) args.price = { $gte: price[0], $lte: price[1] };
+    const products = await productModel
+      .find(args)
+      .populate("category")
+      .find({ isActive: 1 })
+      .select({ image: 0 })
+      // .limit(8)
+      .sort({ createdAt: -1 });
+    if (products.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "All Products.",
+        totalProductsCount: products.length,
+        data: products,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No products were found.",
+        data: products,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in filterProductsController api ${error}`,
+    });
+  }
+};
+
+// get products accoring to per page
+const productListController = async (req, res) => {
+  try {
+    const perPage = 4;
+    const page = req.params.page ? req.params.page : 1;
+    const products = await productModel
+      .find({ isActive: 1 })
+      .select({ image: 0 })
+      .skip((page - 1) * perPage)
+      .populate("category")
+      .limit(perPage)
+      .sort({ createdAt: -1 });
+    if (products.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "All Products.",
+        totalProductsCount: products.length,
+        data: products,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No products were found.",
+        data: products,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in productListController api ${error}`,
+    });
+  }
+};
+
+// get all products count
+const productCountController = async (req, res) => {
+  try {
+    const products = await productModel.find({ isActive: 1 }).countDocuments();
+    if (products) {
+      return res.status(200).send({
+        status: true,
+        message: "All Products Count.",
+        data: products,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No products Count were found.",
+        data: products,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in productCountController api ${error}`,
+    });
+  }
+};
+// get searched products
+const productSearchController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const products = await productModel
+      .find({
+        isActive: 1,
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .populate("category")
+      .sort({ createdAt: -1 })
+      .select({ image: 0 });
+    if (products) {
+      return res.status(200).send({
+        status: true,
+        message: "All Searched Products.",
+        data: products,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No Searched Products were found.",
+        data: products,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in productSearchController api ${error}`,
+    });
+  }
+};
+
+// get related products
+const getRelatedProductsController = async (req, res) => {
+  try {
+    const { productId, categoryId } = req.params;
+    const products = await productModel
+      .find({ isActive: 1, category: categoryId, _id: { $ne: productId } })
+      .select({ image: 0 })
+      .populate("category")
+      .limit(4)
+      .sort({ createdAt: -1 });
+    if (products.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "All Products.",
+        totalProductsCount: products.length,
+        data: products,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No products were found.",
+        data: products,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in getAllProductsController api ${error}`,
+    });
+  }
+};
+
+// get category wise products
+const getCategoryProductsController = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const category = await categoryModel.findOne({ slug });
+    const products = await productModel
+      .find({ isActive: 1, category: category._id })
+      .select({ image: 0 })
+      .populate("category")
+      .sort({ createdAt: -1 });
+    if (products.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "All Products.",
+        data: products,
+        category,
+      });
+    } else {
+      return res.status(200).send({
+        status: true,
+        message: "No products were found.",
+        data: products,
+        category,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error in getAllProductsController api ${error}`,
+    });
+  }
+};
 module.exports = {
   createProductController,
   getAllProductsController,
@@ -189,4 +395,10 @@ module.exports = {
   getImageController,
   deleteProductController,
   udpateProductController,
+  filterProductsController,
+  productListController,
+  productCountController,
+  productSearchController,
+  getRelatedProductsController,
+  getCategoryProductsController,
 };

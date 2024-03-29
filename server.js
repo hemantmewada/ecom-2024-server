@@ -7,6 +7,8 @@ const authRouter = require("./routes/authRoutes");
 const config = require("./config/config");
 const categoryRouter = require("./routes/categoryRoutes");
 const productRouter = require("./routes/productRoutes");
+const paymentRouter = require("./routes/paymentRoutes");
+const orderRouter = require("./routes/orderRoutes");
 
 // configure dotenv
 dotenv.config();
@@ -35,6 +37,8 @@ app.use("/api", testRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
+app.use("/api/payment", paymentRouter);
+app.use("/api/order", orderRouter);
 
 mongodbConnect().then(() => {
   app.listen(PORT, () => {

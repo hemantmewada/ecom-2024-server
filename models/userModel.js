@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema(
     otp: {
       type: Number,
     },
+    city: {
+      type: String,
+    },
+    zip: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );
