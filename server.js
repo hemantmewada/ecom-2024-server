@@ -9,6 +9,7 @@ const categoryRouter = require("./routes/categoryRoutes");
 const productRouter = require("./routes/productRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const orderRouter = require("./routes/orderRoutes");
+const os = require("os");
 
 // configure dotenv
 dotenv.config();
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
   res.status(200).send({
     status: true,
     message: "This domains api is created & managed by @hemantmewada",
+    numOfCpus: os.cpus().length,
   });
 });
 
