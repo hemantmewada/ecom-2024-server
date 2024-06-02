@@ -12,7 +12,7 @@ const companySchema = new mongoose.Schema({
   address: String,
   phone: String,
   email: String,
-  screenshot: String,
+  // screenshot: String,
 });
 
 module.exports = mongoose.model('Company', companySchema);
