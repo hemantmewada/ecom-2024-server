@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema({
   url: String,
-  name: String,
+  title: String,
   description: String,
   logo: String,
   facebook: String,
