@@ -262,7 +262,7 @@ const scrapeData = async (req, res) => {
 };
 const scrapedData = async (req, res) => {
   try {
-    const savedCompanies = await Company.find({});
+    const savedCompanies = await Company.find({}).select(["-screenshot"]);
     return res.status(200).send({
       status: true,
       message: "All companies",
