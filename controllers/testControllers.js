@@ -216,9 +216,14 @@ const scrapeData = async (req, res) => {
     }
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
-    const contactDetails = {url,title:null,description:null,fb:null,insta:null,twitter:null,linkedin:null,phone:null,email:null,screenshot:null};
+    const contactDetails = {icon:null,url,title:null,description:null,fb:null,insta:null,twitter:null,linkedin:null,phone:null,email:null,screenshot:null};
     contactDetails.title = capitalizeFirstLetter(url.split("//")[1].replace("www.","").split(".")[0]);
-    contactDetails.description = $('meta[name="description"]').attr("content")
+    contactDetails.description = $('meta[name="description"]').attr("content");
+    let icon = $('link[rel="icon"]').attr("href");
+    if (!icon?.startsWith("htt") && icon != undefined) {
+      icon = url + icon;
+    }
+    contactDetails.icon = icon;
     const fb = $('a[href*="facebook.com"]').attr('href');
     if (fb) contactDetails.fb = fb;
     const insta = $('a[href*="instagram.com"]').attr('href');

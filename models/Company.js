@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema({
+  icon: String,
   url: String,
   title: String,
   description: String,
