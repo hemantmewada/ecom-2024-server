@@ -282,5 +282,22 @@ const scrapedData = async (req, res) => {
     });
   }
 };
+const scrapedSingleData = async (req, res) => {
+  try {
+    const {_id} = req.params;
+    const company = await Company.findById(_id);
+    return res.status(200).send({
+      status: true,
+      message: "single company",
+      data: company,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: `Error caugth : ${error}`,
+      error,
+    });
+  }
+};
 
-module.exports = {testController, scrapeData, scrapedData};
+module.exports = {testController, scrapeData, scrapedData, scrapedSingleData};
