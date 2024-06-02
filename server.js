@@ -10,6 +10,7 @@ const productRouter = require("./routes/productRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const orderRouter = require("./routes/orderRoutes");
 const os = require("os");
+const path = require("path");
 
 // configure dotenv
 dotenv.config();
@@ -23,6 +24,8 @@ const app = express();
 // using middlewares
 app.use(cors());
 app.use(express.json());
+const CURRENT_WORKING_DIR = process.cwd();
+app.use('/files', express.static(path.join(CURRENT_WORKING_DIR, 'files')));
 // app.use(formidableMiddleware());
 
 // home route
