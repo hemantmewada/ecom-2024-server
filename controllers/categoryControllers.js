@@ -41,7 +41,7 @@ const getCategoryController = async (req, res) => {
     if (categories.length > 0) {
       return res.status(200).send({
         status: true,
-        message: "Category list.",
+        message: "Category list.123",
         data: categories,
       });
     } else {
